@@ -36,7 +36,7 @@ function Main() {
 
 
 function SendAV({ props }) {
-  const url = "https://organic-capybara-qj7v9676r5g347v5-5000.app.github.dev" //change this to the localhost url
+  const url = "http://127.0.0.1:5000" //change this to the localhost url
   const [video, setVideo] = useState(null)
   const [isUploaded, setIsUploaded] = useState(false)
   function handleUpload(e) {

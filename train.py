@@ -108,7 +108,7 @@ def create_dict():
 
 if __name__ == "__main__":
     key_map = create_dict()
-    batch_size = 32
+    batch_size = 64
     model = AudioClassifier(len(key_map))
     loss_fn = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
