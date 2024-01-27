@@ -17,13 +17,15 @@ mongodb_client = PyMongo(app)
 db = mongodb_client.db
 
 def create_dict():
+    with open("index.txt", "r") as file:
+            text = file.read()
+            tags = text.split("\n")
     res = {}
-    names = os.listdir("./datasets/imgs")
-    names.remove("tmp")
-    for i,name in enumerate(names):
+    for i,name in enumerate(tags):
         res[name] = i
     
     return res
+        
 
 type_map = create_dict()
 
