@@ -39,8 +39,14 @@ function SendAV({ props }) {
   const url = "https://organic-capybara-qj7v9676r5g347v5-5000.app.github.dev" //change this to the localhost url
   const [video, setVideo] = useState(null)
   const [isUploaded, setIsUploaded] = useState(false)
+
   function handleUpload(e) {
-    setVideo(() => e.target.files[0])
+    setVideo((prevState) => {
+      return {
+        videoFile: e.target.files[0],
+        videoURL: URL.createObjectURL(e.target.files[0])
+      }
+    })
   }
   const [startTime, setStartTime] = useState(0);
 
@@ -50,7 +56,7 @@ function SendAV({ props }) {
   }, []);
 
   const handleSubmit = async () => {
-    if (video !== null) {
+    if (video.videoFile !== null) {
       const data = await axios.get(url+'/clear')
       if(data.data.number > 0){
         const response = await axios.post(url+'/clear')
@@ -58,8 +64,8 @@ function SendAV({ props }) {
       const formData = new FormData()
       formData.append(
         'uploaded_file',
-        video,
-        video.name
+        video.videoFile,
+        video.videoFile.name
       )
 
       const response = await axios.post(url+'/convert', formData, {
@@ -101,7 +107,7 @@ function SendAV({ props }) {
       </div>
       <div className="flex justify-center items-center">
         {isUploaded && <video controls>
-          <source src={URL.createObjectURL(video)} type="video/mp4" className="w-[80%] h-auto" />
+          <source key = {video.videoFile.name} src={video.videoURL} type="video/mp4" className="w-[80%] h-auto" />
           Your browser does not support the video tag.
         </video>}
       </div>
