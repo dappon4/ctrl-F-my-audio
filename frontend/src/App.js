@@ -51,6 +51,10 @@ function SendAV({ props }) {
 
   const handleSubmit = async () => {
     if (video !== null) {
+      const data = await axios.get(url+'/clear')
+      if(data.data.number > 0){
+        const response = await axios.post(url+'/clear')
+      }
       const formData = new FormData()
       formData.append(
         'uploaded_file',
@@ -82,11 +86,6 @@ function SendAV({ props }) {
     )
   }
 
-   const clearContents = async () =>{
-    const response = await axios.post(url+'/clear')
-    console.log(await response)
-  }
-
   return (
     <div className="flex flex-col gap-10">
       <div className="mt-20 bg-[#041C44] flex flex-col items-center max-w-[70vw] rounded-xl pb-10 ">
@@ -105,14 +104,6 @@ function SendAV({ props }) {
           <source src={URL.createObjectURL(video)} type="video/mp4" className="w-[80%] h-auto" />
           Your browser does not support the video tag.
         </video>}
-      </div>
-      <div>
-      <button
-        className="mt-10 rounded-xl w-[80px] text-sm h-[50px] md:w-[150px] md:h-[60px] md:text-xl bg-[#1abc9c] text-textColor font-semibold"
-        onClick={clearContents}
-      >
-        Clear
-      </button>
       </div>
     </div>
 

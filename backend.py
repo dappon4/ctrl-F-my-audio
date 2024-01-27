@@ -38,6 +38,9 @@ class Clear(Resource):
 
         except: 
             return jsonify({'message': 'Not Cleared'})
+    
+    def get(self):
+        return jsonify({'number': len(os.listdir('./assets/uploads'))})
 
 
 api.add_resource(Convert, '/convert')
