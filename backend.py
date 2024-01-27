@@ -1,27 +1,23 @@
-from flask import Flask, request, send_file, jsonify, make_response
+from flask import Flask, request, send_file, jsonify
 from flask_restful import Api, Resource
 from flask_cors import CORS
-from mp4_to_mp3 import *
-from mp3Clipper import *
+from mp4_to_mp3 import find_mp4
+from mp3Clipper import split_mp3
 import os
 
 app = Flask(__name__)
-CORS(app,origins= '*')
+CORS(app, origins='*')
 api = Api(app)
 
 class Convert(Resource):
     def post(self):
         file = request.files['uploaded_file']
-        print(file)
-        file.save('./assets/uploads/' + file.filename) # Save the file to a specific directory
-        mp3Name = find_mp4('./assets/uploads','./assets/mp3')
-        return jsonify({'data':mp3Name,'message': 'File uploaded successfully'})
+        file.save('./assets/uploads/' + file.filename)
+        mp3_name = find_mp4('./assets/uploads', './assets/mp3')
+        split_mp3('./assets/chunks', 10)
+        return jsonify({'data': mp3_name, 'message': 'File uploaded successfully'})
 
-
-    def get(self):
-        return 'bhen ke lode, post request mar'
-
-api.add_resource(Convert,'/convert')
+api.add_resource(Convert, '/convert')
 
 if __name__ == '__main__':
     app.run(debug=True)
