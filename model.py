@@ -15,7 +15,7 @@ class AudioClassifier(nn.Module):
  
         self.flat = nn.Flatten()
  
-        self.fc3 = nn.Linear(576, 512)
+        self.fc3 = nn.Linear(18432, 512)
         self.act3 = nn.ReLU()
         self.drop3 = nn.Dropout(0.5)
  
