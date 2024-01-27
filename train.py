@@ -21,11 +21,9 @@ def preproces():
 
     # Display the spectrogram
     plt.figure(figsize=(10, 4))
-    librosa.display.specshow(spectrogram_db, sr=sr, x_axis='time', y_axis='mel')
-    plt.colorbar(format='%+2.0f dB')
-    plt.title('Spectrogram')
+    librosa.display.specshow(spectrogram_db, sr=sr)
+    plt.savefig("imgs/test.png", bbox_inches='tight', pad_inches=0)
     plt.show()
-    plt.savefig("test.png")
     
 
 if __name__ == "__main__":
