@@ -13,7 +13,7 @@ class AudioClassifier(nn.Module):
         self.act2 = nn.ReLU()
         self.pool2 = nn.MaxPool2d(kernel_size=(4, 4))
  
-        self.flat = nn.Flatten()
+        self.flat = nn.Flatten(start_dim=1)
  
         self.fc3 = nn.Linear(18432, 512)
         self.act3 = nn.ReLU()
@@ -30,7 +30,7 @@ class AudioClassifier(nn.Module):
         x = self.act2(self.conv2(x))
         # input 32x96x96, output 32x24x24
         x = self.pool2(x)
-        # input 32x24x24, output 18432
+        # input 32x24x24, output 32x576
         x = self.flat(x)
         # input 18432, output 512
         x = self.act3(self.fc3(x))

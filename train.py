@@ -6,53 +6,81 @@ import numpy as np
 from PIL import Image
 import torch
 import torch.nn as nn
+from torchvision import transforms
 
 from model import AudioClassifier
-# FILEPATH: /c:/Users/Dahong Luo/programming/python/ctrl-F-my-audio/test/test.ipynb
+from format_dataset import format
 
-def resize_img(path):
-    # Open the image
-    image = Image.open(path)
+def load_data(type_map,randomize = False):
+    res = []
+    for type in type_map:
+        directory = f"datasets/imgs/{type}"
+        file_names = os.listdir(directory)
+        for file in file_names:
+            resized_image = Image.open(f"datasets/imgs/{type}/{file}")
+            
+            resized_image = resized_image.convert("RGB")
 
-    # Resize the image
-    resized_image = image.resize((100, 100))
+            # Apply the ToTensor transformation
+            transform = transforms.ToTensor()
+            image_tensor = transform(resized_image)
 
-    # Save the resized image
-    resized_image.save("imgs/resized_image.png")
+            target = torch.tensor(type_map[type])
+            # Print the PyTorch matrix
+            res.append((image_tensor, target))
+    
+    if randomize:
+        np.random.shuffle(res)
+    
+    return res
 
-# Call the function with the path to your image
+def test_model(model,test_loader):
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for images, labels in test_loader:
+            y_pred = model(images)
+            _, predicted = torch.max(y_pred.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+    print(f"Accuracy of the network on the {total} test images: {100 * correct / total}%")
 
-def preprocess():
-    filename = os.path.join("datasets","4.wav")
-    print(os.path.isfile(filename))
-
-    # Load the audio file
-    audio, sr = librosa.load(filename)
-
-    # Compute the spectrogram
-    spectrogram = librosa.feature.melspectrogram(y=audio, sr=sr)
-
-    # Convert the spectrogram to dB scale
-    spectrogram_db = librosa.power_to_db(spectrogram, ref=np.max)
-
-    # Display the spectrogram
-    plt.figure(figsize=(10, 4))
-    librosa.display.specshow(spectrogram_db, sr=sr)
-    plt.savefig("imgs/test.png", bbox_inches='tight', pad_inches=0)
-    resize_img("imgs/test.png")
-    plt.show()
-
-def train():
-    pass
+def main(data,n_epochs,model,loss_fn,optimizer,train_size,split = True):
+    if split:
+        n = len(data)
+        train_num = int(n*train_size)
+        train_loader = torch.utils.data.DataLoader(data[:train_num], batch_size=32, shuffle=True)
+        test_loader = torch.utils.data.DataLoader(data[train_num:], batch_size=32, shuffle=True)
+    else:
+        pass
+    
+    train(train_loader,n_epochs,loss_fn,optimizer)
+    
+    torch.save(model.state_dict(), "models/model_3.pth")
+    test_model(model,test_loader)
+    test_model(model,train_loader)
+    
+        
+def train(train_loader,epochs,loss_fn,optimizer):
+    for i in range(epochs):
+        print(f"Epoch {i+1}")
+        for inputs, labels in train_loader:
+            y_pred = model(inputs)
+            loss = loss_fn(y_pred, labels)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
 if __name__ == "__main__":
+    key_map = {"angry_sound":0,"Bird":1,"Cats":2,"Dog":3,"guns":4}
+    batch_size = 16
     model = AudioClassifier(5)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    n_epochs = 7
+    data = load_data(key_map)
     
-    n_epochs = 20
+    main(data,n_epochs,model,loss_fn,optimizer,0.8)
     
-    for _ in range(n_epochs):
-        for file in os.listdir("imgs"):
-            pass
+    
     
