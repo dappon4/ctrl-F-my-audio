@@ -1,5 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
+import axios from 'axios';
 
 
 
@@ -23,29 +24,68 @@ function Header() {
 }
 
 function Main() {
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
-
   return (
     <div className="flex justify-center bg-headerColor h-[100vh]">
-      <SendAV selectedTemplate={selectedTemplate}/>
+      <SendAV />
     </div>
   );
 }
 
 
 
-function SendAV({selectedTemplate}) {
-  const [input, setinput] = useState("");
-  const [latex, setLatex] = useState("");
+function SendAV({ props }) {
+  const url = "https://organic-capybara-qj7v9676r5g347v5-5000.app.github.dev/convert"
+  const [video, setVideo] = useState(null)
 
+  function handleUpload(e) {
+    setVideo(()=>e.target.files[0])
+  }
+  
+
+  const handleSubmit = async () =>{
+  
+  const formData = new FormData()
+  formData.append(
+    'uploaded_file',
+    video,
+    video.name
+  )
+
+  const response = await axios.post(url, formData,{
+    onUploadProgress: progressEvent => {
+      let progress = Math.round(progressEvent.loaded*100 / progressEvent.total)
+      if(progress == 100){
+        setVideo(null)
+      }
+      console.log(progress+'%')
+    }
+  })//get upload progress
+  console.log(await response)
+}
+  function isUploaded(){
+    if(video!==null){
+      return (
+        <div>
+          <label for="submit"
+        className="mt-5 rounded-xl w-[150px] text-sm h-[50px] md:h-[60px] md:text-xl bg-secondary text-textColor font-semibold hover:bg-[#1abc9c] flex items-center justify-center cursor-pointer"
+      >Submit</label>
+      <input type="submit" id="submit" name="submit" className='w-0' onClick={handleSubmit} />
+        </div>
+      )
+    }
+
+  }
   return (
-    <div className="flex flex-col gap-10 justify-center items-center ">
-      <p className="text-center text-2xl">Upload the File Below:</p>
-      <button
-        className="mt-5 rounded-xl w-[80px] text-sm h-[50px] md:w-[150px] md:h-[60px] md:text-xl bg-secondary text-textColor font-semibold hover:bg-[#1abc9c]"
-      >
-        Send
-      </button>
+    <div className="bg-[#041C44] h-[60%] mt-32 flex flex-col items-center max-w-[70vw] rounded-sm">
+      <p className="text-center text-2xl mt-10 max-w-[85%]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, soluta iure voluptatem quibusdam sapiente eligendi voluptatem quibusdam sapiente eligendi:</p>
+
+      <label for="video"
+        className="mt-16 rounded-sm w-[80px] text-sm h-[50px] md:w-[80%] md:h-[60px] md:text-xl bg-secondary text-textColor font-semibold hover:bg-[#1abc9c] flex items-center justify-center cursor-pointer"
+      >Select video file</label>
+      <input type="file" id="video" name="video" accept="video/*" className='w-0' onChange={handleUpload} required/>
+
+      {isUploaded()}
+
     </div>
   );
 }
