@@ -2,7 +2,7 @@ import os
 import subprocess
 
 def split_mp3(output_folder, segment_length=10):
-    input_folder = './assets/mp3'
+    input_folder = os.path.join('assets','mp3')
     output_folder = os.path.abspath(output_folder)
 
     if not os.path.exists(output_folder):

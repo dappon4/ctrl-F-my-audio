@@ -16,14 +16,25 @@ app.config["MONGO_URI"] = 'mongodb+srv://swastikagrawal3:Tu4mktXVe3HJKhLy@ctrlf.
 mongodb_client = PyMongo(app)
 db = mongodb_client.db
 
-type_map = {"angry_sound":0, "Bird":1, "Cats":2, "Dog":3, "guns":4}
+def create_dict():
+    res = {}
+    names = os.listdir("./datasets/imgs")
+    names.remove("tmp")
+    for i,name in enumerate(names):
+        res[name] = i
+    
+    return res
+
+type_map = create_dict()
 
 class Convert(Resource):
     def post(self):
+        step = 3
         file = request.files['uploaded_file']
-        file.save('./assets/uploads/' + file.filename)
-        mp3_name = find_mp4('./assets/uploads', './assets/mp3')
-        split_mp3('./assets/chunks', 10)
+        file.save(os.path.join("assets","uploads",file.filename))
+        mp3_name = find_mp4(os.path.join("assets", "uploads"), os.path.join("assets", "mp3"))
+        split_mp3(os.path.join("assets","chunks"), step)
+        inference(os.path.join('models','acc-69.pth'), os.path.join("assets","chunks"), type_map,step)
         return jsonify({'data': mp3_name, 'message': 'File uploaded successfully'})
 
 class Clear(Resource):
