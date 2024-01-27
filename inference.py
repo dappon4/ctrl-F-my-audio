@@ -71,7 +71,7 @@ def inference(model_path, audio_path, key_map, step):
             output = model(input_tensor)
             _, predicted_class = torch.max(output, 1)
 
-            res.append({i*3:reverse_map[predicted_class.item()]})
+            res.append({i*step:reverse_map[predicted_class.item()]})
     
     print(res)
     return res
