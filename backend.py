@@ -10,14 +10,25 @@ app = Flask(__name__)
 CORS(app, origins='*')
 api = Api(app)
 
-type_map = {"angry_sound":0, "Bird":1, "Cats":2, "Dog":3, "guns":4}
+def create_dict():
+    res = {}
+    names = os.listdir("datasets/imgs")
+    names.remove("tmp")
+    for i,name in enumerate(names):
+        res[name] = i
+    
+    return res
+
+type_map = create_dict()
 
 class Convert(Resource):
     def post(self):
+        step = 3
         file = request.files['uploaded_file']
         file.save('./assets/uploads/' + file.filename)
         mp3_name = find_mp4('./assets/uploads', './assets/mp3')
-        split_mp3('./assets/chunks', 10)
+        split_mp3('./assets/chunks', step)
+        inference('models/acc-69.pth', './assets/chunks', type_map,step)
         return jsonify({'data': mp3_name, 'message': 'File uploaded successfully'})
 
 class Clear(Resource):

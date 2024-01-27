@@ -31,6 +31,7 @@ def audio_to_img(path):
 
     # Save the resized image
     resized_image.save(f"datasets/tmp/output/tmp.png")
+    plt.close()
     
 def convert(path):
     
@@ -46,15 +47,18 @@ def convert(path):
     
     return image_tensor
 
-def inference(model_path, audio_path, key_map):
+def inference(model_path, audio_path, key_map, step):
+    reverse_map = {v: k for k, v in key_map.items()}
+    
     model = AudioClassifier(len(key_map))
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
     files = os.listdir(audio_path)
+    files.sort()
     res = []
 
-    for file in files:
+    for i,file in enumerate(files):
         file_path = os.path.join(audio_path, file)
         
         if os.path.isfile(file_path):
@@ -67,7 +71,7 @@ def inference(model_path, audio_path, key_map):
             output = model(input_tensor)
             _, predicted_class = torch.max(output, 1)
 
-            res.append(predicted_class.item())
+            res.append({i*3:reverse_map[predicted_class.item()]})
     
     print(res)
 
