@@ -3,6 +3,7 @@ from flask_restful import Api, Resource
 from flask_cors import CORS
 from mp4_to_mp3 import *
 from mp3Clipper import *
+from inference import inference
 import os
 
 app = Flask(__name__)
@@ -22,6 +23,8 @@ class Convert(Resource):
 
     def get(self):
         return 'bhen ke lode, post request mar'
+
+
 
 api.add_resource(Convert,'/convert')
 
