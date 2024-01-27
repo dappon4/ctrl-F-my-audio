@@ -9,13 +9,17 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision import transforms
 import time
+import random
 
 from model import AudioClassifier
 from format_dataset import format
 
-def load_data(type_map,randomize = False):
-    res = []
+def load_data(type_map,train_size = 0.8):
+    
+    train_data = []
+    test_data = []
     for type in type_map:
+        L = []
         directory = f"datasets/imgs/{type}"
         file_names = os.listdir(directory)
         for file in file_names:
@@ -29,18 +33,30 @@ def load_data(type_map,randomize = False):
 
             target = torch.tensor(type_map[type])
             # Print the PyTorch matrix
-            res.append((image_tensor, target))
+            L.append((image_tensor, target))
+        
+        n = len(L)
+        train_sample = int(n*train_size)
+        random.shuffle(L)
+        train_data += L[:train_sample]
+        test_data += L[train_sample:]
     
-    if randomize:
-        np.random.shuffle(res)
+    train_loader = torch.utils.data.DataLoader(train_data, batch_size=32, shuffle=True)
+    test_loader = torch.utils.data.DataLoader(test_data, batch_size=32, shuffle=True)
     
-    return res
+    return train_loader, test_loader
+        
+    n = len(res)
+    train_num = int(n*train_size)
+    train_loader = torch.utils.data.DataLoader(data[:train_num], batch_size=32, shuffle=True)
+    test_loader = torch.utils.data.DataLoader(data[train_num:], batch_size=32, shuffle=True)
+    
+    return train_loader, test_loader
 
 def test_model(model,test_loader):
     correct = 0
     total = 0
     model.eval()
-    loss = 0
     
     t1 = time.time()
     with torch.no_grad():
@@ -53,14 +69,8 @@ def test_model(model,test_loader):
     t2 = time.time()
     print(f"Accuracy of the network on the {total} test images: {100 * correct / total}%, took {t2-t1} seconds")
 
-def main(data,n_epochs,model,loss_fn,optimizer,train_size,split = True,train_bool = True):
-    if split:
-        n = len(data)
-        train_num = int(n*train_size)
-        train_loader = torch.utils.data.DataLoader(data[:train_num], batch_size=32, shuffle=True)
-        test_loader = torch.utils.data.DataLoader(data[train_num:], batch_size=32, shuffle=True)
-    else:
-        pass
+def main(train_loader,test_loader,n_epochs,model,loss_fn,optimizer,train_bool = True):
+    
     
     if train_bool:
         t1 = time.time()
@@ -101,15 +111,15 @@ if __name__ == "__main__":
     batch_size = 64
     model = AudioClassifier(len(key_map))
     loss_fn = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
-    n_epochs = 15
+    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    n_epochs = 60
     
     t1 = time.time()
-    data = load_data(key_map)
+    train_loader, test_loader = load_data(key_map,0.8)
     t2 = time.time()
     print(f"Loading data took {t2-t1} seconds")
     
-    main(data,n_epochs,model,loss_fn,optimizer,0.8)
+    main(train_loader,test_loader,n_epochs,model,loss_fn,optimizer)
     
     
     
