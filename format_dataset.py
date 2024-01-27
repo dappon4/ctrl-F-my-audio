@@ -13,7 +13,7 @@ def resize_img(path):
     image = Image.open(path)
 
     # Resize the image
-    resized_image = image.resize((100, 100))
+    resized_image = image.resize((200, 200))
 
     # Save the resized image
     resized_image.save("imgs/resized_image.png")
