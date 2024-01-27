@@ -1,7 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import axios from 'axios';
-
+import { Upload } from 'lucide-react';
 
 
 function App() {
@@ -36,7 +36,7 @@ function Main() {
 
 
 function SendAV({ props }) {
-  const url = "https://organic-capybara-qj7v9676r5g347v5-5000.app.github.dev/convert"
+  const url = "https://organic-capybara-qj7v9676r5g347v5-5000.app.github.dev" //change this to the localhost url
   const [video, setVideo] = useState(null)
   const [isUploaded, setIsUploaded] = useState(false)
   function handleUpload(e) {
@@ -50,55 +50,73 @@ function SendAV({ props }) {
   }, []);
 
   const handleSubmit = async () => {
-    const formData = new FormData()
-    formData.append(
-      'uploaded_file',
-      video,
-      video.name
-    )
+    if (video !== null) {
+      const formData = new FormData()
+      formData.append(
+        'uploaded_file',
+        video,
+        video.name
+      )
 
-    const response = await axios.post(url, formData, {
-      onUploadProgress: progressEvent => {
-        let progress = Math.round(progressEvent.loaded * 100 / progressEvent.total)
-        if (progress === 100) {
-          setIsUploaded(true)
+      const response = await axios.post(url+'/convert', formData, {
+        onUploadProgress: progressEvent => {
+          let progress = Math.round(progressEvent.loaded * 100 / progressEvent.total)
+          if (progress === 100) {
+            setIsUploaded(true)
+          }
+          console.log(progress + '%')
         }
-        console.log(progress + '%')
-      }
-    })//get upload progress
-    console.log(await response)
+      })//get upload progress
+      console.log(await response)
+    }
   }
+
   function isSubmitted() {
     return (
       <div>
         <label for="submit"
-          className="mt-5 rounded-xl w-[150px] text-sm h-[50px] md:h-[60px] md:text-xl bg-secondary text-textColor font-semibold hover:bg-[#1abc9c] flex items-center justify-center cursor-pointer"
-        >Submit</label>
+          className="rounded-[25px] w-[70px] text-sm h-[20px] md:h-[60px] md:text-xl bg-textColor text-[#041C44] font-semibold hover:bg-[#949494] flex items-center justify-center cursor-pointer"
+        ><Upload size={32} strokeWidth={2} /></label>
         <input type="submit" id="submit" name="submit" className='w-0' onClick={handleSubmit} />
       </div>
     )
   }
 
+   const clearContents = async () =>{
+    const response = await axios.post(url+'/clear')
+    console.log(await response)
+  }
+
   return (
     <div className="flex flex-col gap-10">
       <div className="mt-20 bg-[#041C44] flex flex-col items-center max-w-[70vw] rounded-xl pb-10 ">
-      <p className="text-center text-2xl mt-10 max-w-[85%]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, soluta iure voluptatem quibusdam sapiente eligendi voluptatem quibusdam sapiente eligendi:</p>
+        <p className="text-center text-2xl mt-10 max-w-[85%]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, soluta iure voluptatem quibusdam sapiente eligendi voluptatem quibusdam sapiente eligendi:</p>
 
-      <label for="video"
-        className="mt-16 rounded-sm w-[80px] text-sm h-[50px] md:w-[80%] md:h-[60px] md:text-xl bg-secondary text-textColor font-semibold hover:bg-[#1abc9c] flex items-center justify-center cursor-pointer"
-      >Select video file</label>
-      <input type="file" id="video" name="video" accept="video/*" className='w-0' onChange={handleUpload} required />
+        <label for="video"
+          className="mt-16 rounded-sm w-[80px] text-sm h-[50px] md:w-[80%] md:h-[60px] md:text-xl bg-secondary text-textColor font-semibold hover:bg-[#1abc9c] flex items-center justify-center cursor-pointer"
+        >Select video file</label>
+        <input type="file" id="video" name="video" accept="video/*" className='w-0' onChange={handleUpload} required />
 
-      {!isUploaded && video !== null && isSubmitted()}
+        {isSubmitted()}
 
-    </div>
+      </div>
       <div className="flex justify-center items-center">
         {isUploaded && <video controls>
           <source src={URL.createObjectURL(video)} type="video/mp4" className="w-[80%] h-auto" />
           Your browser does not support the video tag.
         </video>}
       </div>
+      <div>
+      <button
+        className="mt-10 rounded-xl w-[80px] text-sm h-[50px] md:w-[150px] md:h-[60px] md:text-xl bg-[#1abc9c] text-textColor font-semibold"
+        onClick={clearContents}
+      >
+        Clear
+      </button>
+      </div>
     </div>
+
+
   );
 }
 
