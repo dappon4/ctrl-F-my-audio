@@ -9,6 +9,7 @@ def find_mp4(mp4_folder_location, mp3_folder_location):
             video = VideoFileClip(os.path.join(mp4_folder_location, filename))
 
             video.audio.write_audiofile(os.path.join(mp3_folder_location,filename[:-4]+".mp3"))
+            return os.path.join(mp3_folder_location,filename[:-4]+".mp3")
 
 mp4_folder_location = r"C:\Users\sange\OneDrive\Desktop\input"
 
