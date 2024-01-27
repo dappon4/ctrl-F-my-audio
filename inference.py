@@ -46,26 +46,46 @@ def convert(path):
     
     return image_tensor
 
-def inference(model_path,audio_path):
-    model = AudioClassifier(5)
+def inference(model_path, audio_path, key_map):
+    model = AudioClassifier(len(key_map))
     model.load_state_dict(torch.load(model_path))
     model.eval()
+
+    files = os.listdir(audio_path)
+    res = []
+
+    for file in files:
+        file_path = os.path.join(audio_path, file)
+        
+        if os.path.isfile(file_path):
+            input_tensor = convert(file_path)
+
+            # Add batch dimension to input_tensor
+            input_tensor = input_tensor.unsqueeze(0)
+
+            print(input_tensor.shape)
+            output = model(input_tensor)
+            _, predicted_class = torch.max(output, 1)
+
+            res.append(predicted_class.item())
     
-    input_tensor = convert(audio_path)
+    print(res)
+
+
+def create_dict():
+    res = {}
+    names = os.listdir("datasets/imgs")
+    names.remove("tmp")
+    for i,name in enumerate(names):
+        res[name] = i
     
-    # Add batch dimension to input_tensor
-    input_tensor = input_tensor.unsqueeze(0)
-    
-    print(input_tensor.shape)
-    output = model(input_tensor)
-    _, predicted_class = torch.max(output, 1)
-    
-    print(predicted_class.item())
+    return res
 
 def main():
+    dic = create_dict()
     model_path = "models/model_3.pth"
-    audio_path = "datasets/tmp/input/test.mp3"
+    audio_path = "assets/chunks"
     
-    inference(model_path,audio_path)
+    inference(model_path,audio_path,dic)
 if __name__ == "__main__":
     main()
