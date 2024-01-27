@@ -9,6 +9,8 @@ app = Flask(__name__)
 CORS(app,origins= '*')
 api = Api(app)
 
+type_map = {"angry_sound":0, "Bird":1, "Cats":2, "Dog":3, "guns":4}
+
 class Convert(Resource):
     def post(self):
         file = request.files['uploaded_file']
