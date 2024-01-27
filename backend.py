@@ -49,8 +49,17 @@ class Clear(Resource):
         return jsonify({'number': len(os.listdir('./assets/uploads'))})
 
 
+class Query(Resource):
+    def post(self,k):
+        data = request.get_json()
+        query = k
+
+        db.data.insert_one(data)
+        return jsonify({'message': 'Data saved successfully'})
+
 api.add_resource(Convert, '/convert')
 api.add_resource(Clear, '/clear')
+api.add_resource(Query, '/query/<string:k>')
 
 
 if __name__ == '__main__':

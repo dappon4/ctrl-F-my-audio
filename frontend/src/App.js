@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import { Upload } from 'lucide-react';
-
+import Log from "./Log";
 
 function App() {
   return (
@@ -111,10 +111,12 @@ function SendAV({ props }) {
           Your browser does not support the video tag.
         </video>}
       </div>
+      {isUploaded && <Log /> }
     </div>
 
 
   );
 }
+
 
 export default App;
