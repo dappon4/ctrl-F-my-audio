@@ -25,6 +25,7 @@ def preproces():
     plt.colorbar(format='%+2.0f dB')
     plt.title('Spectrogram')
     plt.show()
+    plt.savefig("test.png")
     
 
 if __name__ == "__main__":
