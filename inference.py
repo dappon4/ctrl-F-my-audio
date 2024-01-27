@@ -74,6 +74,7 @@ def inference(model_path, audio_path, key_map, step):
             res.append({i*3:reverse_map[predicted_class.item()]})
     
     print(res)
+    return res
 
 
 def create_dict():
