@@ -1,9 +1,9 @@
 from pymongo.mongo_client import MongoClient
 
 
-uri = "mongodb+srv://swastikagrawal3:NUw3CtIirJZHCqKR@ctrlf.9wvxvoo.mongodb.net/?retryWrites=true&w=majority"
+uri = "mongodb+srv://dahong:2RE7PgrEGqEDTpdE@ctrlf.9wvxvoo.mongodb.net/?retryWrites=true&w=majority"
 cluster = MongoClient(uri)
-db = cluster['predictions']
+db = cluster['prediction']
 collection = db['data']
 print(collection.find_one())
 collection.insert_one({'category': 'hello', 'stamp': '0'})

@@ -34,7 +34,7 @@ type_map = create_dict()
 
 class Convert(Resource):
     def post(self):
-        step = 1
+        step = 3
         file = request.files['uploaded_file']
         file.save(os.path.join("assets","uploads",file.filename))
         mp3_name = find_mp4(os.path.join("assets", "uploads"), os.path.join("assets", "mp3"))
@@ -80,11 +80,20 @@ class Query(Resource):
         db.data.insert_one(data)
         return jsonify({'message': 'Data saved successfully'})
 
+    
+    
     def get(self,k):
-        query = k
-        data = db.data.find_one(query)
-        print(data)
-        return jsonify({'data': data})
+        
+        dic = {}
+        
+        data = db.data.find({'category': k})
+        for entry in data:
+            if entry["category"] not in dic:
+                dic[entry["category"]] = []
+            
+            dic[entry["category"]].append(int(entry["stamp"]))
+        
+        return jsonify({'data': dic})
 
 api.add_resource(Convert, '/convert')
 api.add_resource(Clear, '/clear')
