@@ -12,11 +12,12 @@ CORS(app, origins='*')
 api = Api(app)
 app.config["SECRET KEY"] = '41bf9b4327c668b81f8f3f660eddb8f4bcfea2f8'
 
+# uri = "mongodb://localhost:27017"
+# client = MongoClient('localhost', 27017)
 uri = "mongodb+srv://swastikagrawal3:NUw3CtIirJZHCqKR@ctrlf.9wvxvoo.mongodb.net/?retryWrites=true&w=majority"
-# Create a new client and connect to the server
 cluster = MongoClient(uri)
-# Send a ping to confirm a successful connection
 db = cluster['predictions']
+# db = client['predictions']
 
 def create_dict():
     with open("index.txt", "r") as file:
