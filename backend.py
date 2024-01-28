@@ -39,7 +39,7 @@ class Convert(Resource):
         file.save(os.path.join("assets","uploads",file.filename))
         mp3_name = find_mp4(os.path.join("assets", "uploads"), os.path.join("assets", "mp3"))
         split_mp3(os.path.join("assets","chunks"), step)
-        tags = inference(os.path.join('models','acc-75-2.pth'), os.path.join("assets","chunks"), type_map,step)
+        tags = inference(os.path.join('models','acc-77.pth'), os.path.join("assets","chunks"), type_map,step)
         print(tags)
         db.drop_collection('data')
         collection = db.create_collection('data')
@@ -77,11 +77,9 @@ class Getall(Resource):
         dic = {}
         data = db.data.find({})
         for entry in data:
-            if entry["category"] not in dic:
-                dic[entry["category"]] = []
-            
-            dic[entry["category"]].append(int(entry["stamp"]))
+            data[int(entry["stamp"])] = entry["category"]
         
+        data.sort()
         return jsonify({'data': dic})
 
 class Query(Resource):
