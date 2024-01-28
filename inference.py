@@ -38,7 +38,7 @@ def convert(path):
     audio_to_img(path)
     
     resized_image = Image.open("inference_tmp/output/tmp.png")
-            
+
     resized_image = resized_image.convert("RGB")
 
     # Apply the ToTensor transformation
@@ -72,11 +72,8 @@ def inference(model_path, audio_path, key_map, step):
 
             
             output = model(input_tensor)
-            print(output)
             probs = torch.nn.functional.softmax(output, dim=1)
-            print(probs)
             predicted_idx = torch.argmax(output, 1).item()
-            print(predicted_idx)
 
             probability = probs[0][predicted_idx].item()
             
