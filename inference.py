@@ -22,22 +22,22 @@ def audio_to_img(path):
     
     plt.figure(figsize=(10, 4))
     librosa.display.specshow(spectrogram_db, sr=sr)
-    plt.savefig(f"inference_tmp/tmp.png", bbox_inches='tight', pad_inches=0)
+    plt.savefig(f"datasets/tmp/tmp.png", bbox_inches='tight', pad_inches=0)
     
-    image = Image.open(f"inference_tmp/tmp.png")
+    image = Image.open(f"datasets/tmp/tmp.png")
 
     # Resize the image
     resized_image = image.resize((100, 100))
 
     # Save the resized image
-    resized_image.save(f"inference_tmp/output/tmp.png")
+    resized_image.save(f"datasets/tmp/output/tmp.png")
     plt.close()
     
 def convert(path):
     
     audio_to_img(path)
     
-    resized_image = Image.open("inference_tmp/output/tmp.png")
+    resized_image = Image.open("datasets/tmp/output/tmp.png")
             
     resized_image = resized_image.convert("RGB")
 
@@ -78,11 +78,10 @@ def inference(model_path, audio_path, key_map, step):
 
 
 def create_dict():
-    with open("index.txt", "r") as file:
-            text = file.read()
-            tags = text.split("\n")
     res = {}
-    for i,name in enumerate(tags):
+    names = os.listdir("datasets/imgs")
+    names.remove("tmp")
+    for i,name in enumerate(names):
         res[name] = i
     
     return res
