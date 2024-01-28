@@ -96,7 +96,7 @@ def create_dict():
 
 def main():
     dic = create_dict()
-    model_path = "models/model_3.pth"
+    model_path = "models/acc-77.pth"
     audio_path = "assets/chunks"
     
     inference(model_path,audio_path,dic)
