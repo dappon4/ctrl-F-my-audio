@@ -49,7 +49,7 @@ def convert(path):
 
 def inference(model_path, audio_path, key_map, step):
     
-    confidence_threshold = 0.7
+    confidence_threshold = 0.6
     
     reverse_map = {v: k for k, v in key_map.items()}
     
@@ -96,7 +96,7 @@ def create_dict():
 
 def main():
     dic = create_dict()
-    model_path = "models/acc-77.pth"
+    model_path = "models/acc-76-s.pth"
     audio_path = "assets/chunks"
     
     inference(model_path,audio_path,dic)
