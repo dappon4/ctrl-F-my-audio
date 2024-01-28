@@ -14,10 +14,10 @@ app.config["SECRET KEY"] = '41bf9b4327c668b81f8f3f660eddb8f4bcfea2f8'
 
 uri = "mongodb+srv://swastikagrawal3:NUw3CtIirJZHCqKR@ctrlf.9wvxvoo.mongodb.net/?retryWrites=true&w=majority"
 # Create a new client and connect to the server
-client = MongoClient(uri)
+cluster = MongoClient(uri)
 # Send a ping to confirm a successful connection
-db = client.predictions
-print(db.data.find())
+db = cluster['predictions']
+print(db)
 
 def create_dict():
     with open("index.txt", "r") as file:
@@ -40,13 +40,14 @@ class Convert(Resource):
         mp3_name = find_mp4(os.path.join("assets", "uploads"), os.path.join("assets", "mp3"))
         split_mp3(os.path.join("assets","chunks"), step)
         tags = inference(os.path.join('models','acc-69.pth'), os.path.join("assets","chunks"), type_map,step)
-        
+        print(tags)
+        count = 0
         for tag in tags:
-            db.data.insert_one(tag)
-        
-        return jsonify({'data': mp3_name, 'message': 'File uploaded successfully','base':{
-            db.data.find()
-        }})
+            for k,v in dict(tag).items():
+                db['data'].insert_one({'_id': count,'category': v, 'stamp': k})
+            count += 1
+
+        return jsonify({'data': mp3_name, 'message': 'File uploaded successfully'})
 
 class Clear(Resource):
     def post(self):

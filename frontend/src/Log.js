@@ -3,8 +3,9 @@ import "./App.css";
 import {useState} from "react";
 import { Search } from 'lucide-react';
 import axios from 'axios';
+import sample from './sample';
 
-const Log = () => {
+const Log = (props) => {
     const [query, setQuery] = useState("");
     const queryEndPoint = 'http://localhost:5000/query'
      //change this later
