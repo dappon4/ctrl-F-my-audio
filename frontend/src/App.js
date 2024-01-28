@@ -49,7 +49,7 @@ function SendAV({ props }) {
   }
   const videoRef = useRef(null);
 
-  const handle`Skip`ToTimestamp = () => {
+  const handleSkipToTimestamp = () => {
     if (videoRef.current) {
       // Set the desired timestamp (10 seconds in this case)
       videoRef.current.currentTime = startTime;
