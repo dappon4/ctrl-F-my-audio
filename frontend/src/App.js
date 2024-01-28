@@ -95,7 +95,7 @@ function SendAV({ props }) {
   return (
     <div className="flex flex-col gap-10">
       <div className="mt-20 bg-[#041C44] flex flex-col items-center max-w-[70vw] rounded-xl pb-10 ">
-        <p className="text-center text-2xl mt-10 max-w-[85%]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, soluta iure voluptatem quibusdam sapiente eligendi voluptatem quibusdam sapiente eligendi:</p>
+        <p className="text-center text-2xl mt-10 max-w-[85%]">Wanna find something in your footage? You should ctrlFYourVideo: </p>
 
         <label for="video"
           className="mt-16 rounded-sm w-[80px] text-sm h-[50px] md:w-[80%] md:h-[60px] md:text-xl bg-secondary text-textColor font-semibold hover:bg-[#1abc9c] flex items-center justify-center cursor-pointer"
