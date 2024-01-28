@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { Upload } from 'lucide-react';
 import Log from "./Log";
@@ -34,7 +34,6 @@ function Main() {
 }
 
 
-
 function SendAV({ props }) {
   const url = "http://127.0.0.1:5000" //change this to the localhost url
   const [video, setVideo] = useState({videoFile: null, videoURL: null})
@@ -48,6 +47,15 @@ function SendAV({ props }) {
       }
     })
   }
+  const videoRef = useRef(null);
+
+  const handleSkipToTimestamp = () => {
+    if (videoRef.current) {
+      // Set the desired timestamp (10 seconds in this case)
+      videoRef.current.currentTime = startTime;
+    }
+  };
+
   const [startTime, setStartTime] = useState(0);
 
   useEffect(() => {
@@ -57,9 +65,9 @@ function SendAV({ props }) {
 
   const handleSubmit = async () => {
     if (video.videoFile !== null) {
-      const data = await axios.get(url+'/clear')
-      if(data.data.number > 0){
-        const response = await axios.post(url+'/clear')
+      const data = await axios.get(url + '/clear')
+      if (data.data.number > 0) {
+        const response = await axios.post(url + '/clear')
       }
       const formData = new FormData()
       formData.append(
@@ -68,7 +76,7 @@ function SendAV({ props }) {
         video.videoFile.name
       )
 
-      const response = await axios.post(url+'/convert', formData, {
+      const response = await axios.post(url + '/convert', formData, {
         onUploadProgress: progressEvent => {
           let progress = Math.round(progressEvent.loaded * 100 / progressEvent.total)
           if (progress === 100) {
@@ -106,12 +114,19 @@ function SendAV({ props }) {
 
       </div>
       <div className="flex justify-center items-center">
-        {isUploaded && <video controls>
-          <source key = {video.videoFile.name} src={video.videoURL} type="video/mp4" className="w-[80%] h-auto" />
+        {isUploaded && <video ref={videoRef} controls>
+          <source key={video.videoFile.name} src={video.videoURL} type="video/mp4" className="w-[80%] h-auto" />
           Your browser does not support the video tag.
         </video>}
+        <button
+          className="mt-2 rounded-xl w-[80px] text-sm h-[50px] md:w-[150px] md:h-[60px] md:text-xl bg-[#1abc9c] text-textColor font-semibold"
+          onClick={handleSkipToTimestamp}
+        >
+          Skip to 0:10
+        </button>
+
       </div>
-      {isUploaded && <Log /> }
+      {isUploaded && <Log />}
     </div>
 
 

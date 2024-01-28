@@ -1,9 +1,13 @@
 import os
 import subprocess
+# import taipy as tp
 
 def split_mp3(output_folder, segment_length=10):
     input_folder = os.path.join('assets','mp3')
     output_folder = os.path.abspath(output_folder)
+    # scenario_cfg = tp.config['scenario']
+    # tp.config['scenario']['data']['path'] = input_folder
+    # scenario = tp.create_scenario(scenario_cfg)
 
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
