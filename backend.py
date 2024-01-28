@@ -41,11 +41,10 @@ class Convert(Resource):
         split_mp3(os.path.join("assets","chunks"), step)
         tags = inference(os.path.join('models','acc-69.pth'), os.path.join("assets","chunks"), type_map,step)
         print(tags)
-        count = 0
+
         for tag in tags:
             for k,v in dict(tag).items():
-                db['data'].insert_one({'_id': count,'category': v, 'stamp': k})
-            count += 1
+                db['data'].insert_one({'category': v, 'stamp': k})
 
         return jsonify({'data': mp3_name, 'message': 'File uploaded successfully'})
 
