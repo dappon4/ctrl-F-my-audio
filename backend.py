@@ -19,7 +19,7 @@ cluster = MongoClient(uri)
 db = cluster['predictions']
 # db = client['predictions']
 
-def create_dict():
+def create_dict():  
     with open("index.txt", "r") as file:
             text = file.read()
             tags = text.split("\n")
@@ -72,6 +72,18 @@ class Clear(Resource):
         return jsonify({'number': len(os.listdir('./assets/uploads'))})
 
 
+class Getall(Resource):
+    def get(self):
+        dic = {}
+        data = db.data.find({})
+        for entry in data:
+            if entry["category"] not in dic:
+                dic[entry["category"]] = []
+            
+            dic[entry["category"]].append(int(entry["stamp"]))
+        
+        return jsonify({'data': dic})
+
 class Query(Resource):
     def post(self,k):
         data = request.get_json()
@@ -84,20 +96,18 @@ class Query(Resource):
     
     def get(self,k):
         
-        dic = {}
+        dic = {k:[]}
         
         data = db.data.find({'category': k})
         for entry in data:
-            if entry["category"] not in dic:
-                dic[entry["category"]] = []
-            
-            dic[entry["category"]].append(int(entry["stamp"]))
+            dic[k].append(int(entry["stamp"]))
         
         return jsonify({'data': dic})
 
 api.add_resource(Convert, '/convert')
 api.add_resource(Clear, '/clear')
 api.add_resource(Query, '/query/<string:k>')
+api.add_resource(Getall, '/getall')
 
 
 if __name__ == '__main__':
