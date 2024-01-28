@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { Upload } from 'lucide-react';
 import Log from "./Log";
+import DisplayLog from "./DisplayLog";
 
 function App() {
   return (
@@ -35,12 +36,12 @@ function Main() {
 
 
 function SendAV({ props }) {
-  const url = "http://127.0.0.1:5000" //change this to the localhost url
+  const url = "https://organic-capybara-qj7v9676r5g347v5-5000.app.github.dev" //change this to the localhost url
   const [video, setVideo] = useState({videoFile: null, videoURL: null})
   const [isUploaded, setIsUploaded] = useState(false)
 
   function handleUpload(e) {
-    setVideo((prevState) => {
+    setVideo(() => {
       return {
         videoFile: e.target.files[0],
         videoURL: URL.createObjectURL(e.target.files[0])
@@ -92,7 +93,7 @@ function SendAV({ props }) {
   function isSubmitted() {
     return (
       <div>
-        <label for="submit"
+        <label htmlFor="submit"
           className="rounded-[25px] w-[70px] text-sm h-[20px] md:h-[60px] md:text-xl bg-textColor text-[#041C44] font-semibold hover:bg-[#949494] flex items-center justify-center cursor-pointer"
         ><Upload size={32} strokeWidth={2} /></label>
         <input type="submit" id="submit" name="submit" className='w-0' onClick={handleSubmit} />
@@ -105,7 +106,7 @@ function SendAV({ props }) {
       <div className="mt-20 bg-[#041C44] flex flex-col items-center max-w-[70vw] rounded-xl pb-10 ">
         <p className="text-center text-2xl mt-10 max-w-[85%]">Wanna find something in your footage? You should ctrlFYourVideo: </p>
 
-        <label for="video"
+        <label htmlFor="video"
           className="mt-16 rounded-sm w-[80px] text-sm h-[50px] md:w-[80%] md:h-[60px] md:text-xl bg-secondary text-textColor font-semibold hover:bg-[#1abc9c] flex items-center justify-center cursor-pointer"
         >Select video file</label>
         <input type="file" id="video" name="video" accept="video/*" className='w-0' onChange={handleUpload} required />
@@ -126,10 +127,9 @@ function SendAV({ props }) {
         </button>
 
       </div>
-      {isUploaded && <Log />}
+      {isUploaded && <Log/>}
+      {isUploaded && <DisplayLog handleSkip = {handleSkipToTimestamp}/>}
     </div>
-
-
   );
 }
 
