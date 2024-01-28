@@ -1,9 +1,10 @@
 import "./App.css";
 import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
-import { Upload } from 'lucide-react';
+import {Upload } from 'lucide-react';
 import Log from "./Log";
 import DisplayLog from "./DisplayLog";
+import {Link, Routes, Route} from "react-router-dom";
 
 function App() {
   return (
@@ -18,27 +19,33 @@ function Header() {
   return (
     <header className="p-7 bg-headerColor border-b-gray-500 border-b-[1px] sticky top-0">
       <h1 className='text-center text-4xl tracking-wider font-["Nunito Sans"] text-textColor'>
-        <p className="inline text-secondary">ctrlF</p>MyVideo
+        <Link to='/'><p className="inline text-secondary">ctrlF</p>MyVideo</Link>
       </h1>
     </header>
   );
 }
 
 function Main() {
-  // const className = "hidden mt-5 rounded-xl w-[150px] text-sm h-[50px] md:h-[60px] md:text-xl bg-secondary text-textColor font-semibold hover:bg-[#1abc9c] flex items-center justify-center cursor-pointer"
+  const [video, setVideo] = useState({videoFile: null, videoURL: null})
+  const [isUploaded, setIsUploaded] = useState(false)
+
+ 
   return (
-    <div className="flex justify-center bg-headerColor pb-20">
-      <SendAV />
-      {/* <div className={className}></div> */}
+    <div className="flex flex-col items-center bg-headerColor pb-20">
+      <Routes>
+        <Route path="/" element={<SendAV video={video} setVideo={setVideo} isUploaded={isUploaded} setIsUploaded = {setIsUploaded}/>} />
+        <Route path="/log" element={<Log video={video} setVideo={setVideo}/>} />
+      </Routes>
+  
     </div>
   );
 }
 
 
-function SendAV({ props }) {
+function SendAV({video, setVideo, isUploaded, setIsUploaded}) {
   const url = "https://organic-capybara-qj7v9676r5g347v5-5000.app.github.dev" //change this to the localhost url
-  const [video, setVideo] = useState({videoFile: null, videoURL: null})
-  const [isUploaded, setIsUploaded] = useState(false)
+  // const [video, setVideo] = useState({videoFile: null, videoURL: null})
+  // const [isUploaded, setIsUploaded] = useState(false)
 
   function handleUpload(e) {
     setVideo(() => {
@@ -112,23 +119,21 @@ function SendAV({ props }) {
         <input type="file" id="video" name="video" accept="video/*" className='w-0' onChange={handleUpload} required />
 
         {isSubmitted()}
-
-      </div>
-      <div className="flex justify-center items-center">
+        <div className="flex flex-col justify-center items-center">
         {isUploaded && <video ref={videoRef} controls>
           <source key={video.videoFile.name} src={video.videoURL} type="video/mp4" className="w-[80%] h-auto" />
           Your browser does not support the video tag.
         </video>}
-        <button
-          className="mt-2 rounded-xl w-[80px] text-sm h-[50px] md:w-[150px] md:h-[60px] md:text-xl bg-[#1abc9c] text-textColor font-semibold"
-          onClick={handleSkipToTimestamp}
-        >
-          Skip to 0:10
-        </button>
+        {isUploaded &&  <Link to='/log'>
+    <div className="mt-8 rounded-xl w-[80px] text-md h-[60px] md:w-[30vw] md:text-xl bg-secondary text-textColor font-semibold hover:bg-[#1abc9c] flex items-center justify-center cursor-pointer"
+  >View Log</div>
+  </Link>}
 
       </div>
-      {isUploaded && <Log/>}
-      {isUploaded && <DisplayLog handleSkip = {handleSkipToTimestamp}/>}
+      </div>
+  
+      {/* {isUploaded && <Log/>}
+      {isUploaded && <DisplayLog handleSkip = {handleSkipToTimestamp}/>} */}
     </div>
   );
 }

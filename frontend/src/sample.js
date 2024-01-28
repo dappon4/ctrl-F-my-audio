@@ -3,7 +3,7 @@ let sample ={
     "cats": 10,
     "etc": 20,
     "gunshot": 25,
-    "car": 28
+    "car": 28,
 }
 
 export default sample;

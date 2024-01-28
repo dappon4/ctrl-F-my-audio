@@ -17,7 +17,6 @@ uri = "mongodb+srv://swastikagrawal3:NUw3CtIirJZHCqKR@ctrlf.9wvxvoo.mongodb.net/
 cluster = MongoClient(uri)
 # Send a ping to confirm a successful connection
 db = cluster['predictions']
-print(db)
 
 def create_dict():
     with open("index.txt", "r") as file:
@@ -41,10 +40,11 @@ class Convert(Resource):
         split_mp3(os.path.join("assets","chunks"), step)
         tags = inference(os.path.join('models','acc-69.pth'), os.path.join("assets","chunks"), type_map,step)
         print(tags)
-
+        db.drop_collection('data')
+        collection = db.create_collection('data')
         for tag in tags:
             for k,v in dict(tag).items():
-                db['data'].insert_one({'category': v, 'stamp': k})
+                collection.insert_one({'category': v, 'stamp': k})
 
         return jsonify({'data': mp3_name, 'message': 'File uploaded successfully'})
 
