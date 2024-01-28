@@ -23,7 +23,7 @@ class AudioClassifier(nn.Module):
         
         self.flat = nn.Flatten(start_dim=1)
  
-        self.fc4 = nn.Linear(8192, 2048)
+        self.fc4 = nn.Linear(512, 2048)
         self.act4 = nn.ReLU()
         self.drop4 = nn.Dropout(0.4)
         
@@ -39,7 +39,7 @@ class AudioClassifier(nn.Module):
         
         # input 3x100x100, output 32x92x92
         x = self.conv1(x)
-        #x = self.norm1(x)
+        x = self.norm1(x)
         x = self.act1(x)
         x = self.drop1(x)
         # input 32x92x92, output 32x46x46
@@ -47,14 +47,14 @@ class AudioClassifier(nn.Module):
         
         # input 32x46x46, output 64x44x44
         x = self.conv2(x)
-        #x = self.norm2(x)
+        x = self.norm2(x)
         x = self.act2(x)
         # input 64x44x44, output 64x22x22
         x = self.pool2(x)
         
         # input 64x22x22, output 128x20x20
         x = self.conv3(x)
-        #x = self.norm3(x)
+        x = self.norm3(x)
         x = self.act3(x)
         x = self.drop3(x)
         

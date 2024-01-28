@@ -27,7 +27,7 @@ def audio_to_img(path):
     image = Image.open(f"inference_tmp/tmp.png")
 
     # Resize the image
-    resized_image = image.resize((50, 50))
+    resized_image = image.resize((100, 100))
 
     # Save the resized image
     resized_image.save(f"inference_tmp/output/tmp.png")

@@ -33,12 +33,12 @@ type_map = create_dict()
 
 class Convert(Resource):
     def post(self):
-        step = 3
+        step = 1
         file = request.files['uploaded_file']
         file.save(os.path.join("assets","uploads",file.filename))
         mp3_name = find_mp4(os.path.join("assets", "uploads"), os.path.join("assets", "mp3"))
         split_mp3(os.path.join("assets","chunks"), step)
-        tags = inference(os.path.join('models','acc-76-s.pth'), os.path.join("assets","chunks"), type_map,step)
+        tags = inference(os.path.join('models','acc-77.pth'), os.path.join("assets","chunks"), type_map,step)
         print(tags)
         db.drop_collection('data')
         collection = db.create_collection('data')
