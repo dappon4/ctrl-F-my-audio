@@ -27,7 +27,7 @@ def audio_to_img(path):
     image = Image.open(f"inference_tmp/tmp.png")
 
     # Resize the image
-    resized_image = image.resize((100, 100))
+    resized_image = image.resize((50, 50))
 
     # Save the resized image
     resized_image.save(f"inference_tmp/output/tmp.png")
@@ -49,7 +49,7 @@ def convert(path):
 
 def inference(model_path, audio_path, key_map, step):
     
-    confidence_threshold = 0.6
+    confidence_threshold = 0.7
     
     reverse_map = {v: k for k, v in key_map.items()}
     
@@ -77,6 +77,8 @@ def inference(model_path, audio_path, key_map, step):
 
             probability = probs[0][predicted_idx].item()
             
+            print(reverse_map[predicted_idx], probability)
+            
             if probability >= confidence_threshold:
                 res.append({str(i*step):reverse_map[predicted_idx]})
     
@@ -95,10 +97,12 @@ def create_dict():
     return res
 
 def main():
+    step = 3
+    print("running from main...")
     dic = create_dict()
     model_path = "models/acc-76-s.pth"
     audio_path = "assets/chunks"
     
-    inference(model_path,audio_path,dic)
+    inference(model_path,audio_path,dic, step)
 if __name__ == "__main__":
     main()
