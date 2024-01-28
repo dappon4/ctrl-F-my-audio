@@ -48,6 +48,9 @@ def convert(path):
     return image_tensor
 
 def inference(model_path, audio_path, key_map, step):
+    
+    confidence_threshold = 0.7
+    
     reverse_map = {v: k for k, v in key_map.items()}
     
     model = AudioClassifier(len(key_map))
@@ -67,11 +70,18 @@ def inference(model_path, audio_path, key_map, step):
             # Add batch dimension to input_tensor
             input_tensor = input_tensor.unsqueeze(0)
 
-            print(input_tensor.shape)
+            
             output = model(input_tensor)
-            _, predicted_class = torch.max(output, 1)
+            print(output)
+            probs = torch.nn.functional.softmax(output, dim=1)
+            print(probs)
+            predicted_idx = torch.argmax(output, 1).item()
+            print(predicted_idx)
 
-            res.append({str(i*step):reverse_map[predicted_class.item()]})
+            probability = probs[0][predicted_idx].item()
+            
+            if probability >= confidence_threshold:
+                res.append({str(i*step):reverse_map[predicted_idx]})
     
     print(res)
     return res
