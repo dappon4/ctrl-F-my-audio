@@ -27,7 +27,7 @@ def audio_to_img(path):
     image = Image.open(f"datasets/tmp/tmp.png")
 
     # Resize the image
-    resized_image = image.resize((100, 100))
+    resized_image = image.resize((50, 50))
 
     # Save the resized image
     resized_image.save(f"datasets/tmp/output/tmp.png")
@@ -56,8 +56,9 @@ def inference(model_path,audio_path):
     # Add batch dimension to input_tensor
     input_tensor = input_tensor.unsqueeze(0)
     
-    print(input_tensor.shape)
+    
     output = model(input_tensor)
+    print(output)
     _, predicted_class = torch.max(output, 1)
     
     print(predicted_class.item())

@@ -108,14 +108,14 @@ def create_dict():
 
 if __name__ == "__main__":
     key_map = create_dict()
-    batch_size = 64
+    batch_size = 32
     model = AudioClassifier(len(key_map))
     loss_fn = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-    n_epochs = 60
+    optimizer = optim.SGD(model.parameters(), lr=0.03, momentum=0.9)
+    n_epochs = 100
     
     t1 = time.time()
-    train_loader, test_loader = load_data(key_map,0.8)
+    train_loader, test_loader = load_data(key_map,0.9)
     t2 = time.time()
     print(f"Loading data took {t2-t1} seconds")
     
