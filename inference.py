@@ -61,7 +61,7 @@ def inference(model_path, audio_path, key_map, step):
 
     files = os.listdir(audio_path)
     files.sort()
-    res = []
+    res = {}
 
     for i,file in enumerate(files):
         file_path = os.path.join(audio_path, file)
@@ -82,7 +82,7 @@ def inference(model_path, audio_path, key_map, step):
             print(reverse_map[predicted_idx], probability)
             
             if probability >= confidence_threshold:
-                res.append({str(i*step):reverse_map[predicted_idx]})
+                res[str(i*step)] = reverse_map[predicted_idx]
     
     print(res)
     return res

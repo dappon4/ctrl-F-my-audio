@@ -14,7 +14,7 @@ app.config["SECRET KEY"] = '41bf9b4327c668b81f8f3f660eddb8f4bcfea2f8'
 
 # uri = "mongodb://localhost:27017"
 # client = MongoClient('localhost', 27017)
-uri = "mongodb+srv://swastikagrawal3:NUw3CtIirJZHCqKR@ctrlf.9wvxvoo.mongodb.net/?retryWrites=true&w=majority"
+uri = "mongodb+srv://swastikagrawal3:NUw3CtIirJZHCqKR@ctrlf.9wvxvoo.mongodb.net/?retryWrites=true&w=majority&connectTimeoutMS=300000"
 cluster = MongoClient(uri)
 db = cluster['predictions']
 # db = client['predictions']
@@ -47,7 +47,7 @@ class Convert(Resource):
             for k,v in dict(tag).items():
                 collection.insert_one({'category': v, 'stamp': k})
 
-        return jsonify({'data': mp3_name, 'message': 'File uploaded successfully'})
+        return jsonify({'data': tags, 'message': 'File uploaded successfully'})
 
 class Clear(Resource):
     def post(self):

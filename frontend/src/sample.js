@@ -1,9 +1,9 @@
 let sample ={
-    "dogs": 5,
-    "cats": 10,
-    "etc": 20,
-    "gunshot": 25,
-    "car": 28,
+    "gunshot": 3,
+    "gunshot": 6,
+    "gunshot": 12,
+    "gunshot": 15,
+    "gunshot": 18,
 }
 
 export default sample;
