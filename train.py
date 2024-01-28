@@ -46,12 +46,6 @@ def load_data(type_map,train_size = 0.8):
     
     return train_loader, test_loader
         
-    n = len(res)
-    train_num = int(n*train_size)
-    train_loader = torch.utils.data.DataLoader(data[:train_num], batch_size=32, shuffle=True)
-    test_loader = torch.utils.data.DataLoader(data[train_num:], batch_size=32, shuffle=True)
-    
-    return train_loader, test_loader
 
 def test_model(model,test_loader):
     correct = 0
@@ -77,7 +71,7 @@ def main(train_loader,test_loader,n_epochs,model,loss_fn,optimizer,train_bool = 
         train(train_loader,n_epochs,loss_fn,optimizer)
         t2 = time.time()
         print(f"Training took {t2-t1} seconds")
-        torch.save(model.state_dict(), "models/model_4.pth")
+        torch.save(model.state_dict(), "models/model_5.pth")
     
     test_model(model,test_loader)
     test_model(model,train_loader)
@@ -115,7 +109,7 @@ if __name__ == "__main__":
     n_epochs = 100
     
     t1 = time.time()
-    train_loader, test_loader = load_data(key_map,0.9)
+    train_loader, test_loader = load_data(key_map,0.8)
     t2 = time.time()
     print(f"Loading data took {t2-t1} seconds")
     
