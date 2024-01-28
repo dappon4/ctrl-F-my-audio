@@ -27,7 +27,7 @@ def audio_to_img(path):
     image = Image.open(f"inference_tmp/tmp.png")
 
     # Resize the image
-    resized_image = image.resize((100, 100))
+    resized_image = image.resize((50, 50))
 
     # Save the resized image
     resized_image.save(f"inference_tmp/output/tmp.png")
@@ -48,6 +48,8 @@ def convert(path):
     return image_tensor
 
 def inference(model_path, audio_path, key_map, step):
+    
+    print(f"using model from {model_path}")
     
     confidence_threshold = 0.7
     
