@@ -79,6 +79,12 @@ class Query(Resource):
         db.data.insert_one(data)
         return jsonify({'message': 'Data saved successfully'})
 
+    def get(self,k):
+        query = k
+        data = db.data.find_one(query)
+        print(data)
+        return jsonify({'data': data})
+
 api.add_resource(Convert, '/convert')
 api.add_resource(Clear, '/clear')
 api.add_resource(Query, '/query/<string:k>')
